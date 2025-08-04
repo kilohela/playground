@@ -10,9 +10,16 @@ project(hellocmake
     DESCRIPTION "A cmake, spdlog, fmt, cli11 test project"
 )
 
+find_package(fmt REQUIRED)
+find_package(CLI11 REQUIRED)
+
 add_executable(main)
 if(NOT CMAKE_BUILD_TYPE)
     set(CMAKE_BUILD_TYPE Release)
 endif()
 aux_source_directory(src sources)
 target_sources(main PUBLIC ${sources})
+
+target_link_libraries(main PUBLIC fmt)
+target_link_libraries(main PUBLIC spdlog)
+target_link_libraries(main PUBLIC CLI11::CLI11)
