@@ -12,11 +12,12 @@ struct Note {
 
 class Music {
 public:
-    Music();
+    Music(int bpm);
     const std::vector<Note>& get_notes() const;
-    void add_note(int pitch, float duration, float velocity);
+    void add_note(int pitch, float beats, float velocity);
 
 private:
+    float beats_to_seconds(float beats) const;
     std::vector<Note> notes_;
     int bpm_; // beats per minute
 };

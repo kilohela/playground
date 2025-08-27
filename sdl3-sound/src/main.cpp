@@ -6,7 +6,7 @@
 #include "config.h"
 
 static synth::Synthesizer* synthesizer = nullptr;
-static synth::Music music;
+static synth::Music music(180);
 static SDL_AudioStream *stream = nullptr;
 static SDL_AudioSpec spec;
 
@@ -36,22 +36,22 @@ SDL_AppResult SDL_AppInit(void **appstate, int argc, char *argv[]) {
     synthesizer = new synth::Synthesizer();
 
     // Create a simple melody
-    music.add_note(60, 0.125, 0.8);
-    music.add_note(67, 0.125, 0.8);
-    music.add_note(64, 0.125, 0.8);
-    music.add_note(67, 0.125, 0.8);
-    music.add_note(72, 0.125, 0.8);
-    music.add_note(67, 0.125, 0.8);
-    music.add_note(64, 0.125, 0.8);
-    music.add_note(67, 0.125, 0.8);
-    music.add_note(74, 0.125, 0.8);
-    music.add_note(67, 0.125, 0.8);
-    music.add_note(64, 0.125, 0.8);
-    music.add_note(67, 0.125, 0.8);
-    music.add_note(76, 0.125, 0.8);
-    music.add_note(67, 0.125, 0.8);
-    music.add_note(77, 0.125, 0.8);
-    music.add_note(67, 0.125, 0.8);
+    music.add_note(60, 0.5, 0.8);
+    music.add_note(67, 0.5, 0.8);
+    music.add_note(64, 0.5, 0.8);
+    music.add_note(67, 0.5, 0.8);
+    music.add_note(72, 0.5, 0.8);
+    music.add_note(67, 0.5, 0.8);
+    music.add_note(64, 0.5, 0.8);
+    music.add_note(67, 0.5, 0.8);
+    music.add_note(74, 0.5, 0.8);
+    music.add_note(67, 0.5, 0.8);
+    music.add_note(64, 0.5, 0.8);
+    music.add_note(67, 0.5, 0.8);
+    music.add_note(76, 0.5, 0.8);
+    music.add_note(67, 0.5, 0.8);
+    music.add_note(77, 0.5, 0.8);
+    music.add_note(67, 0.5, 0.8);
     music.add_note(79, 1.0, 0.8); 
 
     synthesizer->play_music(music);

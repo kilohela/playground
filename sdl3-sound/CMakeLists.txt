@@ -28,10 +28,13 @@ target_sources(main PUBLIC ${sources})
 
 option(ENABLE_ASAN "Enable AddressSanitizer" OFF)
 
+set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -g")
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -g")
+
 if(ENABLE_ASAN)
     message(STATUS "AddressSanitizer enabled")
-    set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -fsanitize=address -g")
-    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fsanitize=address -g")
+    set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -fsanitize=address")
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fsanitize=address")
 endif()
 
 target_link_libraries(main PRIVATE fmt)

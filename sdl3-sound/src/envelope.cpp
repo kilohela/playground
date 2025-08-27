@@ -6,11 +6,12 @@ namespace synth {
 
 Envelope::Envelope()
     : state_(State::IDLE),
-      attack_rate_(0.0),
-      decay_rate_(0.0),
-      sustain_level_(1.0),
-      release_rate_(0.0),
-      level_(0.0) {}
+      level_(0.0) {
+    set_attack(0.01);  // default attack time in seconds
+    set_decay(0.1);    // default decay time in seconds
+    set_sustain(0.5);  // default sustain level (0.0 to 1.0)
+    set_release(0.2);  // default release time in seconds
+}
 
 // attack: time in seconds for the envelope to reach its peak
 void Envelope::set_attack(float attack) {
