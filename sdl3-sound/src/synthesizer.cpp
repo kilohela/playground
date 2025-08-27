@@ -1,19 +1,21 @@
 #include "synthesizer.h"
+#include "config.h"
+#include <cassert>
 #include <cmath>
 
 namespace synth {
 
-Synthesizer::Synthesizer(int sample_rate)
-    : sample_rate_(sample_rate),
-      current_music_(nullptr),
+Synthesizer::Synthesizer()
+    : current_music_(nullptr),
       current_note_index_(0),
       time_(0.0) {
-    envelope_.set_attack(0.01);
-    envelope_.set_decay(0.1);
-    envelope_.set_sustain(0.8);
-    envelope_.set_release(0.2);
+
+    for (int i = 0; i < kMaxVoices; ++i) {
+        free_voice_.push_front(&voice_pool_[i]);
+    }
 }
 
+// load the audio stream into buffer, num_frames is the number of sample points
 void Synthesizer::process(float* buffer, int num_frames) {
     for (int i = 0; i < num_frames; ++i) {
         if (current_music_ && current_note_index_ < current_music_->get_notes().size()) {
@@ -23,38 +25,46 @@ void Synthesizer::process(float* buffer, int num_frames) {
                 time_ = 0.0;
                 if (current_note_index_ < current_music_->get_notes().size()) {
                     const auto& next_note = current_music_->get_notes()[current_note_index_];
-                    oscillator_.set_frequency(midi_to_frequency(next_note.pitch));
-                    oscillator_.set_amplitude(next_note.velocity);
-                    envelope_.note_on();
-                } else {
-                    envelope_.note_off();
+                    assert(!free_voice_.empty());
+                    Voice* new_voice_ptr = free_voice_.front();
+                    free_voice_.pop_front();
+                    new_voice_ptr->note_on(Waveform::TRIANGLE, next_note.pitch, next_note.velocity, next_note.duration);
                 }
             }
         }
 
-        double osc_sample = oscillator_.process();
-        double env_sample = envelope_.process();
-        buffer[i] = static_cast<float>(osc_sample * env_sample);
+        float sample = 0.0f;
 
-        time_ += 1.0 / sample_rate_;
+        for (int j = 0; j < kMaxVoices; ++j) {
+            Voice& voice = voice_pool_[j];
+            if(voice.is_active() == false) continue;
+            sample += voice.process();
+            if (!(voice.is_active())) {
+                free_voice_.push_front(&voice);
+            }
+        }
+
+        buffer[i] = fmin(sample, 1.0f);
+
+        time_ += 1.0 / kSampleRate;
     }
 }
 
+// initialize Synthesizer with a Music object
+// should be called before process()
 void Synthesizer::play_music(const Music& music) {
     current_music_ = &music;
     current_note_index_ = 0;
     time_ = 0.0;
 
+    // load the first note
     if (!music.get_notes().empty()) {
-        const auto& first_note = music.get_notes()[0];
-        oscillator_.set_frequency(midi_to_frequency(first_note.pitch));
-        oscillator_.set_amplitude(first_note.velocity);
-        envelope_.note_on();
+        const auto& note = music.get_notes()[0];
+        assert(!free_voice_.empty());
+        Voice* new_voice_ptr = free_voice_.front();
+        free_voice_.pop_front();
+        new_voice_ptr->note_on(Waveform::TRIANGLE, note.pitch, note.velocity, note.duration);
     }
-}
-
-double Synthesizer::midi_to_frequency(int midi_note) {
-    return 440.0 * pow(2.0, (midi_note - 69.0) / 12.0);
 }
 
 } // namespace synth

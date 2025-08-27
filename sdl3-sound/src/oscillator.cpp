@@ -1,5 +1,8 @@
 #include "oscillator.h"
+#include "config.h"
 #include <cmath>
+#include <fmt/core.h>
+#include <cassert>
 
 #ifndef M_PI
 #define M_PI 3.14159265358979323846
@@ -7,26 +10,17 @@
 
 namespace synth {
 
-Oscillator::Oscillator()
-    : waveform_(Waveform::TRIANGLE),
-      frequency_(440.0),
-      amplitude_(1.0),
-      phase_(0.0) {}
-
-void Oscillator::set_waveform(Waveform waveform) {
+void Oscillator::reset(Waveform waveform, float frequency, float amplitude){
+    assert(frequency > 0 || amplitude > 0);
     waveform_ = waveform;
+    frequency_ = frequency;
+    amplitude_ = amplitude;
+    phase_ = 0.0;
 }
 
-void Oscillator::set_frequency(double freq) {
-    frequency_ = freq;
-}
 
-void Oscillator::set_amplitude(double amp) {
-    amplitude_ = amp;
-}
-
-double Oscillator::process() {
-    double value = 0.0;
+float Oscillator::process() {
+    float value = 0.0;
     switch (waveform_) {
         case Waveform::SINE:
             value = sin(phase_ * 2.0 * M_PI);
@@ -42,7 +36,7 @@ double Oscillator::process() {
             break;
     }
 
-    phase_ += frequency_ / 44100.0; // Assuming 44100 sample rate
+    phase_ += frequency_ / kSampleRate;
     if (phase_ >= 1.0) {
         phase_ -= 1.0;
     }

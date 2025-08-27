@@ -13,17 +13,14 @@ enum class Waveform {
 
 class Oscillator {
 public:
-    Oscillator();
-    void set_waveform(Waveform waveform);
-    void set_frequency(double freq);
-    void set_amplitude(double amp);
-    double process();
+    float process();
+    void reset(Waveform waveform, float frequency, float amplitude);
 
 private:
     Waveform waveform_;
-    double frequency_;
-    double amplitude_;
-    double phase_;
+    float frequency_;
+    float amplitude_;
+    float phase_;
 };
 
 } // namespace synth

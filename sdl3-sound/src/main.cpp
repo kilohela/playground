@@ -1,9 +1,9 @@
-#include <fmt/base.h>
 #define SDL_MAIN_USE_CALLBACKS 1
 #include <SDL3/SDL.h>
 #include <SDL3/SDL_main.h>
 #include <fmt/core.h>
 #include "synthesizer.h"
+#include "config.h"
 
 static synth::Synthesizer* synthesizer = nullptr;
 static synth::Music music;
@@ -11,6 +11,11 @@ static SDL_AudioStream *stream = nullptr;
 static SDL_AudioSpec spec;
 
 SDL_AppResult SDL_AppInit(void **appstate, int argc, char *argv[]) {
+
+#ifdef __SANITIZE_ADDRESS__
+    // AddressSanitizer is enabled
+    #warning "ASan is enabled"
+#endif
     SDL_SetAppMetadata("Synthesizer Prototype", "1.0", "com.example.synthesizer");
 
     if (SDL_Init(SDL_INIT_AUDIO) < 0) {
@@ -18,7 +23,7 @@ SDL_AppResult SDL_AppInit(void **appstate, int argc, char *argv[]) {
         return SDL_APP_FAILURE;
     }
 
-    spec.freq = 44100;
+    spec.freq = kSampleRate;
     spec.format = SDL_AUDIO_F32;
     spec.channels = 1;
 
@@ -28,7 +33,7 @@ SDL_AppResult SDL_AppInit(void **appstate, int argc, char *argv[]) {
         return SDL_APP_FAILURE;
     }
 
-    synthesizer = new synth::Synthesizer(spec.freq);
+    synthesizer = new synth::Synthesizer();
 
     // Create a simple melody
     music.add_note(60, 0.125, 0.8);
@@ -57,9 +62,8 @@ SDL_AppResult SDL_AppInit(void **appstate, int argc, char *argv[]) {
 }
 
 SDL_AppResult SDL_AppEvent(void *appstate, SDL_Event *event) {
-    fmt::println("Event");
-    if (event->type == SDL_EVENT_QUIT || event->type == SDL_EVENT_KEY_DOWN) {
-        fmt::println("Quit");
+    if (event->type == SDL_EVENT_QUIT) {
+        fmt::print("Quit\n");
         return SDL_APP_SUCCESS;
     }
     return SDL_APP_CONTINUE;

@@ -26,5 +26,13 @@ add_executable(main src/main.cpp)
 aux_source_directory(src sources)
 target_sources(main PUBLIC ${sources})
 
+option(ENABLE_ASAN "Enable AddressSanitizer" OFF)
+
+if(ENABLE_ASAN)
+    message(STATUS "AddressSanitizer enabled")
+    set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -fsanitize=address -g")
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fsanitize=address -g")
+endif()
+
 target_link_libraries(main PRIVATE fmt)
 target_link_libraries(main PRIVATE SDL3::SDL3)

@@ -1,4 +1,6 @@
 #include "envelope.h"
+#include "config.h"
+#include <fmt/core.h>
 
 namespace synth {
 
@@ -10,23 +12,28 @@ Envelope::Envelope()
       release_rate_(0.0),
       level_(0.0) {}
 
-void Envelope::set_attack(double attack) {
-    attack_rate_ = (attack > 0) ? 1.0 / (attack * 44100.0) : 1.0;
+// attack: time in seconds for the envelope to reach its peak
+void Envelope::set_attack(float attack) {
+    attack_rate_ = (attack > 0) ? 1.0 / (attack * kSampleRate) : 1.0;
 }
 
-void Envelope::set_decay(double decay) {
-    decay_rate_ = (decay > 0) ? 1.0 / (decay * 44100.0) : 1.0;
+// decay: time in seconds for the envelope to fall to the sustain level
+void Envelope::set_decay(float decay) {
+    decay_rate_ = (decay > 0) ? 1.0 / (decay * kSampleRate) : 1.0;
 }
 
-void Envelope::set_sustain(double sustain) {
+// sustain: level at which the envelope holds after decay
+void Envelope::set_sustain(float sustain) {
     sustain_level_ = sustain;
 }
 
-void Envelope::set_release(double release) {
-    release_rate_ = (release > 0) ? 1.0 / (release * 44100.0) : 1.0;
+// release: time in seconds for the envelope to fall to zero after note off
+void Envelope::set_release(float release) {
+    release_rate_ = (release > 0) ? 1.0 / (release * kSampleRate) : 1.0;
 }
 
-double Envelope::process() {
+// generate one sample of the envelope
+float Envelope::process() {
     switch (state_) {
         case State::IDLE:
             break;
@@ -69,6 +76,10 @@ void Envelope::note_off() {
 
 bool Envelope::is_active() const {
     return state_ != State::IDLE;
+}
+
+bool Envelope::is_releasing() const {
+    return state_ == State::RELEASE;
 }
 
 } // namespace synth

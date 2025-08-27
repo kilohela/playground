@@ -5,14 +5,15 @@ namespace synth {
 class Envelope {
 public:
     Envelope();
-    void set_attack(double attack);
-    void set_decay(double decay);
-    void set_sustain(double sustain);
-    void set_release(double release);
-    double process();
+    void set_attack(float attack);
+    void set_decay(float decay);
+    void set_sustain(float sustain);
+    void set_release(float release);
+    float process();
     void note_on();
     void note_off();
     bool is_active() const;
+    bool is_releasing() const;
 
 private:
     enum class State {
@@ -24,11 +25,11 @@ private:
     };
 
     State state_;
-    double attack_rate_;
-    double decay_rate_;
-    double sustain_level_;
-    double release_rate_;
-    double level_;
+    float attack_rate_;
+    float decay_rate_;
+    float sustain_level_;
+    float release_rate_;
+    float level_;
 };
 
 } // namespace synth
