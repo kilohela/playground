@@ -12,16 +12,18 @@ public:
     }
 
     float process();
-    void note_on(Waveform waveform, int midi_note, float velocity, float duration);
+    struct status {
+        Waveform waveform;
+        int midi_note;
+    } status;
+    void note_on(Waveform waveform, int midi_note, float velocity);
+    void note_off();
 
 private:
     float midi_to_frequency(int midi_note);
 
-    Waveform waveform_;
     Oscillator oscillator_;
     Envelope envelope_;
-    float time_;
-    float duration_;
 
     // note_off function: envelope_.note_off()
 };

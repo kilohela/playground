@@ -10,19 +10,20 @@ namespace synth {
 float Voice::process() {
     float osc_sample = oscillator_.process();
     float env_sample = envelope_.process();
-    time_ += 1.0 / kSampleRate;
-    if (time_ >= duration_ && envelope_.is_active() && envelope_.is_releasing() == false) {
-        envelope_.note_off();
-    }
     
     return static_cast<float>(osc_sample * env_sample);
 }
 
-void Voice::note_on(Waveform waveform, int midi_note, float velocity, float duration) {
+void Voice::note_on(Waveform waveform, int midi_note, float velocity) {
+    status.waveform = waveform;
+    status.midi_note = midi_note;
     oscillator_.reset(waveform, midi_to_frequency(midi_note), velocity);
     envelope_.note_on();
-    time_ = 0.0;
-    duration_ = duration;
+}
+
+void Voice::note_off() {
+    status.waveform = Waveform::NONE;
+    envelope_.note_off();
 }
 
 float Voice::midi_to_frequency(int midi_note){

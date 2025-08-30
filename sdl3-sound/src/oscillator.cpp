@@ -34,6 +34,11 @@ float Oscillator::process() {
         case Waveform::TRIANGLE:
             value = 2.0 * fabs(2.0 * (phase_ - floor(phase_ + 0.5))) - 1.0;
             break;
+        default:
+            // should not reach here
+            assert(0); 
+            value = 0.0;
+            break;
     }
 
     phase_ += frequency_ / kSampleRate;

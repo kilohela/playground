@@ -33,27 +33,43 @@ SDL_AppResult SDL_AppInit(void **appstate, int argc, char *argv[]) {
         return SDL_APP_FAILURE;
     }
 
-    synthesizer = new synth::Synthesizer();
-
     // Create a simple melody
-    music.add_note(60, 0.5, 0.8);
-    music.add_note(67, 0.5, 0.8);
-    music.add_note(64, 0.5, 0.8);
-    music.add_note(67, 0.5, 0.8);
-    music.add_note(72, 0.5, 0.8);
-    music.add_note(67, 0.5, 0.8);
-    music.add_note(64, 0.5, 0.8);
-    music.add_note(67, 0.5, 0.8);
-    music.add_note(74, 0.5, 0.8);
-    music.add_note(67, 0.5, 0.8);
-    music.add_note(64, 0.5, 0.8);
-    music.add_note(67, 0.5, 0.8);
-    music.add_note(76, 0.5, 0.8);
-    music.add_note(67, 0.5, 0.8);
-    music.add_note(77, 0.5, 0.8);
-    music.add_note(67, 0.5, 0.8);
-    music.add_note(79, 1.0, 0.8); 
+    music.note_on(0.0, synth::Waveform::TRIANGLE, 60, 0.8);
+    music.note_off(0.5, synth::Waveform::TRIANGLE, 60);
+    music.note_on(0.5, synth::Waveform::TRIANGLE, 67, 0.8);
+    music.note_off(1.0, synth::Waveform::TRIANGLE, 67);
+    music.note_on(1.0, synth::Waveform::TRIANGLE, 64, 0.8);
+    music.note_off(1.5, synth::Waveform::TRIANGLE, 64);
+    music.note_on(1.5, synth::Waveform::TRIANGLE, 67, 0.8);
+    music.note_off(2.0, synth::Waveform::TRIANGLE, 67);
+    music.note_on(2.0, synth::Waveform::TRIANGLE, 72, 0.8);
+    music.note_off(2.5, synth::Waveform::TRIANGLE, 72);
+    music.note_on(2.5, synth::Waveform::TRIANGLE, 67, 0.8);
+    music.note_off(3.0, synth::Waveform::TRIANGLE, 67);
+    music.note_on(3.0, synth::Waveform::TRIANGLE, 64, 0.8);
+    music.note_off(3.5, synth::Waveform::TRIANGLE, 64);
+    music.note_on(3.5, synth::Waveform::TRIANGLE, 67, 0.8);
+    music.note_off(4.0, synth::Waveform::TRIANGLE, 67);
+    music.note_on(4.0, synth::Waveform::TRIANGLE, 74, 0.8);
+    music.note_off(4.5, synth::Waveform::TRIANGLE, 74);
+    music.note_on(4.5, synth::Waveform::TRIANGLE, 67, 0.8);
+    music.note_off(5.0, synth::Waveform::TRIANGLE, 67);
+    music.note_on(5.0, synth::Waveform::TRIANGLE, 64, 0.8);
+    music.note_off(5.5, synth::Waveform::TRIANGLE, 64);
+    music.note_on(5.5, synth::Waveform::TRIANGLE, 67, 0.8);
+    music.note_off(6.0, synth::Waveform::TRIANGLE, 67);
+    music.note_on(6.0, synth::Waveform::TRIANGLE, 76, 0.8);
+    music.note_off(6.5, synth::Waveform::TRIANGLE, 76);
+    music.note_on(6.5, synth::Waveform::TRIANGLE, 67, 0.8);
+    music.note_off(7.0, synth::Waveform::TRIANGLE, 67);
+    music.note_on(7.0, synth::Waveform::TRIANGLE, 77, 0.8);
+    music.note_off(7.5, synth::Waveform::TRIANGLE, 77);
+    music.note_on(7.5, synth::Waveform::TRIANGLE, 67, 0.8);
+    music.note_off(8.0, synth::Waveform::TRIANGLE, 67);
+    music.note_on(8.0, synth::Waveform::TRIANGLE, 79, 0.8);
+    music.note_off(9.0, synth::Waveform::TRIANGLE, 79);
 
+    synthesizer = new synth::Synthesizer();
     synthesizer->play_music(music);
 
     SDL_ResumeAudioStreamDevice(stream);

@@ -5,6 +5,7 @@
 namespace synth {
 
 enum class Waveform {
+    NONE,
     SINE,
     SQUARE,
     SAWTOOTH,
