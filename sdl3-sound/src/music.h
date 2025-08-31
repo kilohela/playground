@@ -2,6 +2,7 @@
 
 #include <cstdint>
 #include <queue>
+#include <vector>
 
 #include "oscillator.h"
 
@@ -19,13 +20,18 @@ struct MidiEvent {
 class Music {
 public:
     Music(int bpm);
-    void note_on(float time, Waveform timbre, uint8_t pitch, float velocity);
-    void note_off(float time, Waveform timbre, uint8_t pitch);
+    void note_on(int channel, const char* note_name, float velocity = 0.8f);
+    void note_off(int channel, const char* note_name);
+    int add_channel(Waveform timbre, float volumn = 1.0f);
     const MidiEvent& get_note() const;
     void pop_note();
     bool has_notes() const;
+    void load_midi(const char* filename); // future work
+    float time_ = 0.0f;
 
 private:
+    std::vector<std::pair<Waveform, float>> channels_;
+    uint8_t note_to_pitch(const char* note) const;
     uint32_t beats_to_ticks(float beats) const;
     std::queue<MidiEvent> notes_;
     int bpm_; // beats per minute

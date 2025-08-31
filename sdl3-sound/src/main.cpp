@@ -6,7 +6,7 @@
 #include "config.h"
 
 static synth::Synthesizer* synthesizer = nullptr;
-static synth::Music music(180);
+static synth::Music music(80);
 static SDL_AudioStream *stream = nullptr;
 static SDL_AudioSpec spec;
 
@@ -34,40 +34,83 @@ SDL_AppResult SDL_AppInit(void **appstate, int argc, char *argv[]) {
     }
 
     // Create a simple melody
-    music.note_on(0.0, synth::Waveform::TRIANGLE, 60, 0.8);
-    music.note_off(0.5, synth::Waveform::TRIANGLE, 60);
-    music.note_on(0.5, synth::Waveform::TRIANGLE, 67, 0.8);
-    music.note_off(1.0, synth::Waveform::TRIANGLE, 67);
-    music.note_on(1.0, synth::Waveform::TRIANGLE, 64, 0.8);
-    music.note_off(1.5, synth::Waveform::TRIANGLE, 64);
-    music.note_on(1.5, synth::Waveform::TRIANGLE, 67, 0.8);
-    music.note_off(2.0, synth::Waveform::TRIANGLE, 67);
-    music.note_on(2.0, synth::Waveform::TRIANGLE, 72, 0.8);
-    music.note_off(2.5, synth::Waveform::TRIANGLE, 72);
-    music.note_on(2.5, synth::Waveform::TRIANGLE, 67, 0.8);
-    music.note_off(3.0, synth::Waveform::TRIANGLE, 67);
-    music.note_on(3.0, synth::Waveform::TRIANGLE, 64, 0.8);
-    music.note_off(3.5, synth::Waveform::TRIANGLE, 64);
-    music.note_on(3.5, synth::Waveform::TRIANGLE, 67, 0.8);
-    music.note_off(4.0, synth::Waveform::TRIANGLE, 67);
-    music.note_on(4.0, synth::Waveform::TRIANGLE, 74, 0.8);
-    music.note_off(4.5, synth::Waveform::TRIANGLE, 74);
-    music.note_on(4.5, synth::Waveform::TRIANGLE, 67, 0.8);
-    music.note_off(5.0, synth::Waveform::TRIANGLE, 67);
-    music.note_on(5.0, synth::Waveform::TRIANGLE, 64, 0.8);
-    music.note_off(5.5, synth::Waveform::TRIANGLE, 64);
-    music.note_on(5.5, synth::Waveform::TRIANGLE, 67, 0.8);
-    music.note_off(6.0, synth::Waveform::TRIANGLE, 67);
-    music.note_on(6.0, synth::Waveform::TRIANGLE, 76, 0.8);
-    music.note_off(6.5, synth::Waveform::TRIANGLE, 76);
-    music.note_on(6.5, synth::Waveform::TRIANGLE, 67, 0.8);
-    music.note_off(7.0, synth::Waveform::TRIANGLE, 67);
-    music.note_on(7.0, synth::Waveform::TRIANGLE, 77, 0.8);
-    music.note_off(7.5, synth::Waveform::TRIANGLE, 77);
-    music.note_on(7.5, synth::Waveform::TRIANGLE, 67, 0.8);
-    music.note_off(8.0, synth::Waveform::TRIANGLE, 67);
-    music.note_on(8.0, synth::Waveform::TRIANGLE, 79, 0.8);
-    music.note_off(9.0, synth::Waveform::TRIANGLE, 79);
+
+    int lead = music.add_channel(synth::Waveform::TRIANGLE);
+    int bass = music.add_channel(synth::Waveform::SAWTOOTH, 0.3);
+
+    music.time_ = 0.0f;
+
+    music.note_on(lead, "C5");
+
+    music.time_ = 0.5f;
+
+    music.note_off(lead, "C5");
+    music.note_on(lead, "C5");
+
+    music.time_ = 1.0f;
+
+    music.note_off(lead, "C5");
+    music.note_on(lead, "G5");
+
+    music.time_ = 1.5f;
+
+    music.note_off(lead, "G5");
+    music.note_on(lead, "G5");
+
+    music.time_ = 2.0f;
+
+    music.note_off(lead, "G5");
+    music.note_on(lead, "A5");
+
+    music.time_ = 2.5f;
+
+    music.note_off(lead, "A5");
+    music.note_on(lead, "A5");
+
+    music.time_ = 3.0f;
+
+    music.note_off(lead, "A5");
+    music.note_on(lead, "G5");
+
+    music.time_ = 4.0f;
+
+    music.note_off(lead, "G5");
+    music.note_on(lead, "F5");
+
+    music.time_ = 4.5f;
+
+    music.note_off(lead, "F5");
+    music.note_on(lead, "F5");
+
+    music.time_ = 5.0f;
+
+    music.note_off(lead, "F5");
+    music.note_on(lead, "E5");
+
+    music.time_ = 5.5f;
+
+    music.note_off(lead, "E5");
+    music.note_on(lead, "E5");
+
+    music.time_ = 6.0f;
+
+    music.note_off(lead, "E5");
+    music.note_on(lead, "D5");
+
+    music.time_ = 6.5f;
+
+    music.note_off(lead, "D5");
+    music.note_on(lead, "D5");
+
+    music.time_ = 7.0f;
+
+    music.note_off(lead, "D5");
+    music.note_on(lead, "C5");
+
+    music.time_ = 8.0f;
+
+    music.note_off(lead, "C5");
+
 
     synthesizer = new synth::Synthesizer();
     synthesizer->play_music(music);

@@ -18,25 +18,23 @@ Synthesizer::Synthesizer()
 // load the audio stream into buffer, num_frames is the number of sample points
 void Synthesizer::process(float* buffer, int num_frames) {
     for (int i = 0; i < num_frames; ++i) {
-        if(current_music_->has_notes() == false){
-            buffer[i] = 0.0f;
-            continue;
-        }
-        const auto& note = current_music_->get_note();
-        if (tick_ >= note.tick) {
-            current_music_->pop_note();
-            if(note.on){
-                assert(!free_voice_.empty());
-                Voice* new_voice_ptr = free_voice_.front();
-                free_voice_.pop_front();
-                new_voice_ptr->note_on(note.timbre, note.pitch, note.velocity);
-            } else {
-                // note off
-                for(int j = 0; j < kMaxVoices; ++j){
-                    Voice& voice = voice_pool_[j];
-                    if(voice.is_active() && voice.status.waveform == note.timbre && voice.status.midi_note == note.pitch){
-                        voice.note_off();
-                        break;
+        if(current_music_->has_notes()){
+            const auto& note = current_music_->get_note();
+            if (tick_ >= note.tick) {
+                current_music_->pop_note();
+                if(note.on){
+                    assert(!free_voice_.empty());
+                    Voice* new_voice_ptr = free_voice_.front();
+                    free_voice_.pop_front();
+                    new_voice_ptr->note_on(note.timbre, note.pitch, note.velocity);
+                } else {
+                    // note off
+                    for(int j = 0; j < kMaxVoices; ++j){
+                        Voice& voice = voice_pool_[j];
+                        if(voice.is_active() && voice.status.waveform == note.timbre && voice.status.midi_note == note.pitch){
+                            voice.note_off();
+                            break;
+                        }
                     }
                 }
             }
