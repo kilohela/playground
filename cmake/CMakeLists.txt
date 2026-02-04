@@ -21,6 +21,8 @@ endif()
 aux_source_directory(src sources)
 target_sources(main PUBLIC ${sources})
 
-target_link_libraries(main PRIVATE fmt)
-target_link_libraries(main PRIVATE spdlog)
-target_link_libraries(main PRIVATE CLI11::CLI11)
+target_link_libraries(main PRIVATE
+    fmt::fmt
+    spdlog::spdlog
+    CLI11::CLI11
+)
